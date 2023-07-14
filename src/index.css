@@ -17,3 +17,104 @@ body {
   background: #d9e0e7;
   font-size: 12px;
 }
+
+.m-t-3 {
+  margin-top: 3px;
+}
+.m-t-5 {
+  margin-top: 5px;
+}
+.m-t-10 {
+  margin-top: 10px;
+}
+.m-t-15 {
+  margin-top: 15px;
+}
+.m-t-20 {
+  margin-top: 20px;
+}
+.m-l-5 {
+  margin-left: 5px;
+}
+.m-l-8 {
+  margin-left: 8px;
+}
+.m-l-10 {
+  margin-left: 10px;
+}
+.m-l-15 {
+  margin-left: 15px;
+}
+.m-l-20 {
+  margin-left: 20px;
+}
+.m-r-5 {
+  margin-right: 5px;
+}
+.m-r-10 {
+  margin-right: 10px;
+}
+.m-r-15 {
+  margin-right: 15px;
+}
+.m-r-20 {
+  margin-right: 20px;
+}
+.m-b-5 {
+  margin-bottom: 5px;
+}
+.m-b-10 {
+  margin-bottom: 10px;
+}
+.m-b-15 {
+  margin-bottom: 15px;
+}
+.m-b-20 {
+  margin-bottom: 20px;
+}
+
+.content {
+  padding: 2px 5px;
+  height: calc(100vh - 115px);
+}
+
+.panel {
+  height: 100%;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 3px;
+}
+.panel-heading {
+  padding: 10px 15px;
+  height: auto;
+  border: none;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  color: #fff;
+  background: #242a30;
+}
+.panel-title {
+  line-height: 20px;
+  font-size: 12px;
+  margin-top: 0;
+  margin-bottom: 0;
+  color: inherit;
+}
+.panel-body {
+  background-color: #fff;
+  height: calc(100vh - 210px);
+  overflow: auto;
+}
+
+.panel-toolbar {
+  border-bottom: 1px solid #eee;
+  padding: 10px 15px;
+  background: #fff;
+}
+
+.el-tree-node:focus > .el-tree-node__content {
+  background-color: rgb(45, 140, 240) !important;
+}
