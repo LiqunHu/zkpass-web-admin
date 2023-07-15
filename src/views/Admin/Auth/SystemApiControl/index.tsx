@@ -1,7 +1,16 @@
 import './style.css'
-import _ from 'lodash'
 import { useState, useEffect } from 'react'
-import { Button, Tree, Modal, Form, Input, Table, Tabs, Select, Popconfirm } from 'antd'
+import {
+  Button,
+  Tree,
+  Modal,
+  Form,
+  Input,
+  Table,
+  Tabs,
+  Select,
+  Popconfirm
+} from 'antd'
 import request from '@/utils/request'
 import common from '@/utils/common'
 import icons from '@/assets/icon.json'
@@ -38,7 +47,11 @@ function SystemApiControl() {
                 removeNode(nodeData)
               }}
             >
-              <Button size="small" shape="circle" style={{ position: 'absolute', left: '500px' }}>
+              <Button
+                size="small"
+                shape="circle"
+                style={{ position: 'absolute', left: '500px' }}
+              >
                 <i className="fa-solid fa-xmark"></i>
               </Button>
             </Popconfirm>
@@ -59,16 +72,16 @@ function SystemApiControl() {
       title: '图标',
       dataIndex: 'iconSource',
       key: 'iconImg',
-      render: (classStr: string | undefined) => <i className={classStr}></i>,
+      render: (classStr: string | undefined) => <i className={classStr}></i>
     },
     {
       title: '图标代码',
       dataIndex: 'iconSource',
-      key: 'iconStr',
-    },
+      key: 'iconStr'
+    }
   ]
 
-  const handleCheckChange = (selectedKeys: any, e: any) => {
+  const handleCheckChange = (_selectedKeys: any, e: any) => {
     setActNode({
       systemmenu_id: e.node.systemmenu_id,
       systemmenu_name: e.node.systemmenu_name,
@@ -78,20 +91,20 @@ function SystemApiControl() {
       api_function: e.node.api_function,
       auth_flag: e.node.auth_flag,
       api_path: e.node.api_path,
-      api_remark: e.node.api_remark,
+      api_remark: e.node.api_remark
     })
   }
 
   const addFolderModal = () => {
     folderForm.resetFields()
     setAction('add')
-    if (_.isEmpty(actNode)) {
-      return common.warning('请选择一个目录')
-    } else {
+    if (actNode) {
       if (actNode.node_type === '01') {
         return common.warning('菜单下不允许新增内容')
       }
       setFolderModalV(true)
+    } else {
+      return common.warning('请选择一个目录')
     }
   }
 
@@ -118,13 +131,13 @@ function SystemApiControl() {
     setAction('add')
     setApiType('0')
     menuForm.resetFields()
-    if (_.isEmpty(actNode)) {
-      return common.warning('请选择一个目录')
-    } else {
+    if (actNode) {
       if (actNode.node_type === '01') {
         return common.warning('菜单下不允许新增内容')
       }
       setMenuModalV(true)
+    } else {
+      return common.warning('请选择一个目录')
     }
   }
 
@@ -151,7 +164,7 @@ function SystemApiControl() {
   }
 
   const editNodeModal = () => {
-    if (_.isEmpty(actNode) || actNode.systemmenu_id === 0) {
+    if (!!actNode || actNode.systemmenu_id === 0) {
       return common.warning('请选择一个节点')
     }
     setAction('modify')
@@ -159,7 +172,7 @@ function SystemApiControl() {
       folderForm.resetFields()
       folderForm.setFieldsValue({
         systemmenu_name: actNode.systemmenu_name,
-        systemmenu_icon: actNode.systemmenu_icon,
+        systemmenu_icon: actNode.systemmenu_icon
       })
       setFolderModalV(true)
     } else if (actNode.node_type === '01') {
@@ -169,7 +182,7 @@ function SystemApiControl() {
         api_path: actNode.api_path,
         api_function: actNode.api_function,
         auth_flag: actNode.auth_flag,
-        api_remark: actNode.api_remark,
+        api_remark: actNode.api_remark
       })
       setApiType(actNode.api_type)
       setMenuModalV(true)
@@ -178,7 +191,9 @@ function SystemApiControl() {
 
   const removeNode = async (node: any) => {
     try {
-      await request.post(apiUrl + 'remove', { systemmenu_id: node.systemmenu_id })
+      await request.post(apiUrl + 'remove', {
+        systemmenu_id: node.systemmenu_id
+      })
       common.success('删除成功')
       await getTreeData()
     } catch (error) {
@@ -217,7 +232,11 @@ function SystemApiControl() {
           <Tree
             showIcon
             defaultExpandedKeys={[0]}
-            icon={(nodeData: any) => (nodeData.node_type === '00' ? <i className="fa-regular fa-folder m-r-5"></i> : null)}
+            icon={(nodeData: any) =>
+              nodeData.node_type === '00' ? (
+                <i className="fa-regular fa-folder m-r-5"></i>
+              ) : null
+            }
             treeData={treeData}
             fieldNames={{ title: 'name', key: 'systemmenu_id' }}
             titleRender={renderTreeNode}
@@ -225,12 +244,27 @@ function SystemApiControl() {
           />
         ) : null}
       </div>
-      <Modal title="目录" centered visible={folderModalV} onCancel={() => setFolderModalV(false)} onOk={submitFolder} width={500}>
+      <Modal
+        title="目录"
+        centered
+        visible={folderModalV}
+        onCancel={() => setFolderModalV(false)}
+        onOk={submitFolder}
+        width={500}
+      >
         <Form form={folderForm} name="folderForm" labelCol={{ span: 4 }}>
-          <Form.Item label="目录名称" name="systemmenu_name" rules={[{ required: true, message: '缺少名称' }]}>
+          <Form.Item
+            label="目录名称"
+            name="systemmenu_name"
+            rules={[{ required: true, message: '缺少名称' }]}
+          >
             <Input />
           </Form.Item>
-          <Form.Item label="图标" name="systemmenu_icon" rules={[{ required: true, message: '缺少图标' }]}>
+          <Form.Item
+            label="图标"
+            name="systemmenu_icon"
+            rules={[{ required: true, message: '缺少图标' }]}
+          >
             <Input.Search
               onSearch={() => {
                 setIconModalV(true)
@@ -239,7 +273,14 @@ function SystemApiControl() {
           </Form.Item>
         </Form>
       </Modal>
-      <Modal title="图标选择" centered visible={iconModalV} onCancel={() => setIconModalV(false)} width={420} footer={null}>
+      <Modal
+        title="图标选择"
+        centered
+        visible={iconModalV}
+        onCancel={() => setIconModalV(false)}
+        width={420}
+        footer={null}
+      >
         <Table
           size="small"
           pagination={{ defaultPageSize: 8 }}
@@ -248,19 +289,30 @@ function SystemApiControl() {
           rowKey="id"
           onRow={(record) => {
             return {
-              onClick: (event) => {
+              onClick: () => {
                 folderForm.setFieldsValue({
-                  systemmenu_icon: record.iconSource,
+                  systemmenu_icon: record.iconSource
                 })
                 setIconModalV(false)
-              }, // 点击行
+              } // 点击行
             }
           }}
         />
       </Modal>
-      <Modal title="菜单" centered visible={menuModalV} onCancel={() => setMenuModalV(false)} onOk={submitMenu} width={500}>
+      <Modal
+        title="菜单"
+        centered
+        visible={menuModalV}
+        onCancel={() => setMenuModalV(false)}
+        onOk={submitMenu}
+        width={500}
+      >
         <Form form={menuForm} name="menuForm" labelCol={{ span: 4 }}>
-          <Form.Item label="功能名称" name="systemmenu_name" rules={[{ required: true, message: '缺少名称' }]}>
+          <Form.Item
+            label="功能名称"
+            name="systemmenu_name"
+            rules={[{ required: true, message: '缺少名称' }]}
+          >
             <Input />
           </Form.Item>
           <Tabs
@@ -277,7 +329,7 @@ function SystemApiControl() {
                 <Input />
               </Form.Item>
               <Form.Item label="权限校验" name="auth_flag">
-                {_.isEmpty(pagePara) ? null : (
+                {!!pagePara ? null : (
                   <Select>
                     {pagePara.authInfo.map((item: any) => (
                       <Select.Option value={item.id} key={item.id}>
@@ -304,7 +356,7 @@ function SystemApiControl() {
                 <Input />
               </Form.Item>
               <Form.Item label="权限校验" name="auth_flag">
-                {_.isEmpty(pagePara) ? null : (
+                {!!pagePara ? null : (
                   <Select>
                     {pagePara.authInfo.map((item: any) => (
                       <Select.Option value={item.id} key={item.id}>

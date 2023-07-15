@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppState, AppThunk } from '@/store'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { AppState } from '@/store'
 import common from '@/utils/common'
 
 export interface AccoountInfoState {

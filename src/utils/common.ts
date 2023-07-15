@@ -61,15 +61,13 @@ const generateRandomAlphaNum = function (len: number) {
   return rdmString.substring(0, len)
 }
 
-// const aesEncryptModeECB = function (msg: string, pwd: string) {
-//   let key = CryptoJS.enc.Utf8.parse(CryptoJS.MD5(pwd).toString())
-
-//   let identifyCode = CryptoJS.AES.encrypt(msg, key, {
-//     mode: CryptoJS.mode.ECB,
-//     padding: CryptoJS.pad.ZeroPadding,
-//   })
-//   return identifyCode.toString()
-// }
+const aesEncryptModeECB = function (msg: string, pwd: string) {
+  let enc = new TextEncoder()
+  let data = enc.encode(msg)
+  console.log(data)
+  let key = enc.encode(pwd)
+  return key.toString()
+}
 
 const success = function (msg: string) {
   message.success(msg)
@@ -193,6 +191,8 @@ const file2Base64 = async function (file: File) {
 const exportFunc = {
   loadJs,
   loadCss,
+  generateRandomAlphaNum,
+  aesEncryptModeECB,
   clearStoreData,
   setStoreData,
   getStoreData,
