@@ -16,7 +16,11 @@ const loadJs = function (urlstr: string) {
     script.src = urlstr
     script.onerror = reject
     script.onload = script.onreadystatechange = function () {
-      if (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
+      if (
+        !this.readyState ||
+        this.readyState === 'loaded' ||
+        this.readyState === 'complete'
+      ) {
         // Handle memory leak in IE
         script.onload = script.onreadystatechange = null
         resolve('loaded')
@@ -42,7 +46,11 @@ const loadCss = function (cssstr: string) {
     link.href = cssstr
     link.onerror = reject
     link.onload = link.onreadystatechange = function () {
-      if (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
+      if (
+        !this.readyState ||
+        this.readyState === 'loaded' ||
+        this.readyState === 'complete'
+      ) {
         // Handle memory leak in IE
         link.onload = link.onreadystatechange = null
         resolve('loaded')
@@ -61,12 +69,41 @@ const generateRandomAlphaNum = function (len: number) {
   return rdmString.substring(0, len)
 }
 
-const aesEncryptModeECB = function (msg: string, pwd: string) {
+const toHexString = (bytes: any) => {
+  return Array.from(bytes, (byte: any) => {
+    return ('0' + (byte & 0xff).toString(16)).slice(-2)
+  }).join('')
+}
+
+const aesEncryptModeCBC = async function (msg: string, pwd: string) {
   let enc = new TextEncoder()
   let data = enc.encode(msg)
-  console.log(data)
-  let key = enc.encode(pwd)
-  return key.toString()
+  let key = await crypto.subtle.digest('SHA-256', enc.encode(pwd))
+  console.log(toHexString(new Uint8Array(key)))
+  let iv = new Uint8Array(16)
+  iv[0] = 1
+  const key_encoded = await crypto.subtle.importKey(
+    'raw',
+    key,
+    'AES-CBC',
+    false,
+    ['encrypt', 'decrypt']
+  )
+  const encrypted_content = await window.crypto.subtle.encrypt(
+    {
+      name: 'AES-CBC',
+      iv: iv
+    },
+    key_encoded,
+    data
+  )
+  const uint8Array = new Uint8Array(encrypted_content)
+  let binaryString = ''
+  uint8Array.forEach((byte) => {
+    binaryString += String.fromCharCode(byte)
+  })
+
+  return btoa(binaryString)
 }
 
 const success = function (msg: string) {
@@ -161,7 +198,11 @@ const clearEmptyParams = (params: any) => {
  * @param type 'day' 'month' 'minute' 'seconds'
  * @returns {number}
  */
-const diff = (start: any, end: any, type: 'day' | 'month' | 'minute' | 'seconds') => {
+const diff = (
+  start: any,
+  end: any,
+  type: 'day' | 'month' | 'minute' | 'seconds'
+) => {
   if (!start || !end) {
     return 0
   }
@@ -192,7 +233,7 @@ const exportFunc = {
   loadJs,
   loadCss,
   generateRandomAlphaNum,
-  aesEncryptModeECB,
+  aesEncryptModeCBC,
   clearStoreData,
   setStoreData,
   getStoreData,
