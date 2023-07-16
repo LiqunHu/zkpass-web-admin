@@ -78,11 +78,11 @@ const toHexString = (bytes: any) => {
 const aesEncryptModeCBC = async function (msg: string, pwd: string) {
   let enc = new TextEncoder()
   let data = enc.encode(msg)
-  let key = await crypto.subtle.digest('SHA-256', enc.encode(pwd))
+  let key = await window.crypto.subtle.digest('SHA-256', enc.encode(pwd))
   console.log(toHexString(new Uint8Array(key)))
   let iv = new Uint8Array(16)
   iv[0] = 1
-  const key_encoded = await crypto.subtle.importKey(
+  const key_encoded = await window.crypto.subtle.importKey(
     'raw',
     key,
     'AES-CBC',
