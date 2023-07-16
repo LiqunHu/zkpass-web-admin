@@ -8,7 +8,7 @@ const load = (children: JSX.Element) => {
 
 const admin = [
   {
-    path: '/admin',
+    path: '/system',
     element: <LayoutPage />,
     children: [
       {

@@ -49,7 +49,6 @@ function Tags() {
   }
 
   useEffect(() => {
-    console.log(location)
     let router = getCurrentRouter(location.pathname)
     if(router) {
       setTags({
@@ -64,7 +63,7 @@ function Tags() {
       <div className="tags-body">
         <ul>{genTags()}</ul>
         <div className="tags-close-box">
-          <Dropdown overlay={menu}>
+          <Dropdown dropdownRender={()=>menu}>
             <Button size="small" type="primary">
               标签选项
               <i className="m-l-5 fa-solid fa-angle-down"></i>

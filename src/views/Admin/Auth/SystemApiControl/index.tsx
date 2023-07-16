@@ -16,7 +16,7 @@ import common from '@/utils/common'
 import icons from '@/assets/icon.json'
 
 function SystemApiControl() {
-  const apiUrl = '/v1/api/admin/auth/SystemApiControl/'
+  const apiUrl = '/v1/api/system/auth/SystemApiControl/'
   const [pagePara, setPagePara] = useState(Object.create(null))
   const [treeData, setTreeData] = useState([])
   const [folderModalV, setFolderModalV] = useState(false)
@@ -164,7 +164,7 @@ function SystemApiControl() {
   }
 
   const editNodeModal = () => {
-    if (!!actNode || actNode.systemmenu_id === 0) {
+    if (!actNode || actNode.systemmenu_id === 0) {
       return common.warning('请选择一个节点')
     }
     setAction('modify')
@@ -247,7 +247,7 @@ function SystemApiControl() {
       <Modal
         title="目录"
         centered
-        visible={folderModalV}
+        open={folderModalV}
         onCancel={() => setFolderModalV(false)}
         onOk={submitFolder}
         width={500}
@@ -276,7 +276,7 @@ function SystemApiControl() {
       <Modal
         title="图标选择"
         centered
-        visible={iconModalV}
+        open={iconModalV}
         onCancel={() => setIconModalV(false)}
         width={420}
         footer={null}
@@ -302,7 +302,7 @@ function SystemApiControl() {
       <Modal
         title="菜单"
         centered
-        visible={menuModalV}
+        open={menuModalV}
         onCancel={() => setMenuModalV(false)}
         onOk={submitMenu}
         width={500}

@@ -6,7 +6,7 @@ import Home from '@/views/Home'
 // import Login from '@/views/Login'
 // import Board from '@/views/Board'
 import Nomatch from '@/views/Nomatch'
-import admin from './admin'
+import system from './system'
 import dashboard from './dashboard'
 const Login = lazy(() => import('@/views/Login'))
 
@@ -28,7 +28,7 @@ const routeList = [
       title: '登陆页',
     },
   },
-  ...admin,
+  ...system,
   ...dashboard,
   {
     path: '*',
