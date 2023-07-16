@@ -235,6 +235,7 @@ const exportFunc = {
   loadJs,
   loadCss,
   generateRandomAlphaNum,
+  toHexString,
   aesEncryptModeCBC,
   clearStoreData,
   setStoreData,
