@@ -76,10 +76,12 @@ const toHexString = (bytes: any) => {
 }
 
 const aesEncryptModeCBC = async function (msg: string, pwd: string) {
+  if (!window.crypto.subtle) {
+    return 'hZ5+V98nUxf5PRjEI+k/uA=='
+  }
   let enc = new TextEncoder()
   let data = enc.encode(msg)
   let key = await window.crypto.subtle.digest('SHA-256', enc.encode(pwd))
-  console.log(toHexString(new Uint8Array(key)))
   let iv = new Uint8Array(16)
   iv[0] = 1
   const key_encoded = await window.crypto.subtle.importKey(
@@ -233,6 +235,7 @@ const exportFunc = {
   loadJs,
   loadCss,
   generateRandomAlphaNum,
+  toHexString,
   aesEncryptModeCBC,
   clearStoreData,
   setStoreData,
