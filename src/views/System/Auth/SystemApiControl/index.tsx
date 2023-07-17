@@ -17,7 +17,7 @@ import icons from '@/assets/icon.json'
 
 function SystemApiControl() {
   const apiUrl = '/v1/api/system/auth/SystemApiControl/'
-  const [pagePara, setPagePara] = useState(Object.create(null))
+  const [pagePara, setPagePara] = useState({authInfo:[]})
   const [treeData, setTreeData] = useState([])
   const [folderModalV, setFolderModalV] = useState(false)
   const [iconModalV, setIconModalV] = useState(false)
@@ -326,23 +326,24 @@ function SystemApiControl() {
                 label: '菜单&授权API',
                 children: (
                   <>
-                    <Form.Item label="菜单路径" name="api_path">
+                    <Form.Item label="菜单路径">
                       <Input />
                     </Form.Item>
-                    <Form.Item label="授权功能" name="api_function">
+                    <Form.Item label="授权功能">
                       <Input />
                     </Form.Item>
-                    <Form.Item label="权限校验" name="auth_flag">
-                      {!!pagePara ? null : (
-                        <Select
-                          options={pagePara.authInfo.map((item: any) => ({
-                            value: item.id,
-                            label: item.text
-                          }))}
-                        />
+                    <Form.Item label="权限校验">
+                      {!pagePara ? null : (
+                        <Select>
+                          {pagePara.authInfo.map((item: any) => (
+                            <Select.Option value={item.id} key={item.id}>
+                              {item.text}
+                            </Select.Option>
+                          ))}
+                        </Select>
                       )}
                     </Form.Item>
-                    <Form.Item label="备注" name="api_remark">
+                    <Form.Item label="备注">
                       <Input.TextArea />
                     </Form.Item>
                   </>
@@ -353,10 +354,10 @@ function SystemApiControl() {
                 label: '菜单',
                 children: (
                   <>
-                    <Form.Item label="菜单路径" name="api_path">
+                    <Form.Item label="菜单路径">
                       <Input />
                     </Form.Item>
-                    <Form.Item label="备注" name="api_remark">
+                    <Form.Item label="备注">
                       <Input.TextArea />
                     </Form.Item>
                   </>
@@ -367,11 +368,11 @@ function SystemApiControl() {
                 label: '授权API',
                 children: (
                   <>
-                    <Form.Item label="授权功能" name="api_function">
+                    <Form.Item label="授权功能">
                       <Input />
                     </Form.Item>
-                    <Form.Item label="权限校验" name="auth_flag">
-                      {!!pagePara ? null : (
+                    <Form.Item label="权限校验">
+                      {!pagePara ? null : (
                         <Select>
                           {pagePara.authInfo.map((item: any) => (
                             <Select.Option value={item.id} key={item.id}>
