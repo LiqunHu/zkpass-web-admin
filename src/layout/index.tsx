@@ -26,7 +26,9 @@ function PublicLayout() {
             <div className="panel-heading">
               <h4 className="panel-title">{router.title}</h4>
             </div>
-            <Outlet />
+            <div style={{padding: 15}}>
+              <Outlet />
+            </div>
           </div>
         </Content>
       </Layout>
