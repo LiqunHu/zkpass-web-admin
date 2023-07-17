@@ -320,57 +320,75 @@ function SystemApiControl() {
             onChange={(activeKey: string) => {
               setApiType(activeKey)
             }}
-          >
-            <Tabs.TabPane tab="菜单&授权API" key="0">
-              <Form.Item label="菜单路径" name="api_path">
-                <Input />
-              </Form.Item>
-              <Form.Item label="授权功能" name="api_function">
-                <Input />
-              </Form.Item>
-              <Form.Item label="权限校验" name="auth_flag">
-                {!!pagePara ? null : (
-                  <Select>
-                    {pagePara.authInfo.map((item: any) => (
-                      <Select.Option value={item.id} key={item.id}>
-                        {item.text}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                )}
-              </Form.Item>
-              <Form.Item label="备注" name="api_remark">
-                <Input.TextArea />
-              </Form.Item>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="菜单" key="1">
-              <Form.Item label="菜单路径" name="api_path">
-                <Input />
-              </Form.Item>
-              <Form.Item label="备注" name="api_remark">
-                <Input.TextArea />
-              </Form.Item>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="授权API" key="2">
-              <Form.Item label="授权功能" name="api_function">
-                <Input />
-              </Form.Item>
-              <Form.Item label="权限校验" name="auth_flag">
-                {!!pagePara ? null : (
-                  <Select>
-                    {pagePara.authInfo.map((item: any) => (
-                      <Select.Option value={item.id} key={item.id}>
-                        {item.text}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                )}
-              </Form.Item>
-              <Form.Item label="备注" name="api_remark">
-                <Input.TextArea />
-              </Form.Item>
-            </Tabs.TabPane>
-          </Tabs>
+            items={[
+              {
+                key: '0',
+                label: '菜单&授权API',
+                children: (
+                  <>
+                    <Form.Item label="菜单路径" name="api_path">
+                      <Input />
+                    </Form.Item>
+                    <Form.Item label="授权功能" name="api_function">
+                      <Input />
+                    </Form.Item>
+                    <Form.Item label="权限校验" name="auth_flag">
+                      {!!pagePara ? null : (
+                        <Select
+                          options={pagePara.authInfo.map((item: any) => ({
+                            value: item.id,
+                            label: item.text
+                          }))}
+                        />
+                      )}
+                    </Form.Item>
+                    <Form.Item label="备注" name="api_remark">
+                      <Input.TextArea />
+                    </Form.Item>
+                  </>
+                )
+              },
+              {
+                key: '1',
+                label: '菜单',
+                children: (
+                  <>
+                    <Form.Item label="菜单路径" name="api_path">
+                      <Input />
+                    </Form.Item>
+                    <Form.Item label="备注" name="api_remark">
+                      <Input.TextArea />
+                    </Form.Item>
+                  </>
+                )
+              },
+              {
+                key: '2',
+                label: '授权API',
+                children: (
+                  <>
+                    <Form.Item label="授权功能" name="api_function">
+                      <Input />
+                    </Form.Item>
+                    <Form.Item label="权限校验" name="auth_flag">
+                      {!!pagePara ? null : (
+                        <Select>
+                          {pagePara.authInfo.map((item: any) => (
+                            <Select.Option value={item.id} key={item.id}>
+                              {item.text}
+                            </Select.Option>
+                          ))}
+                        </Select>
+                      )}
+                    </Form.Item>
+                    <Form.Item label="备注" name="api_remark">
+                      <Input.TextArea />
+                    </Form.Item>
+                  </>
+                )
+              }
+            ]}
+          />
         </Form>
       </Modal>
     </div>
