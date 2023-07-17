@@ -1,6 +1,8 @@
-import { Button, Col, Form, Input, PaginationProps, Popconfirm, Row, Select, Space, Table } from 'antd'
+import { Button, Col, Form, Input, message, PaginationProps, Popconfirm, Row, Select, Space, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { getCodeList } from 'country-list'
+import dayjs from 'dayjs'
+import request from '@/utils/request'
 import Detail from './Detail'
 
 const { Column } = Table;
@@ -20,33 +22,26 @@ const countryOptions = Object.keys(countries).map((key) => ({
 
 const DemandManagement: React.FC = () => {
   const [form] = Form.useForm();
+  const [taskList, setTaskList] = useState<any>([])
   const [total, setTotal] = useState<Number>(0)
   const [page, setPage] = useState<Number>(1)
   const [visible, setVisible] = useState<Boolean>(false)
   const [flag, setFlag] = useState<String>('')
   const [initialValue, setInitialValue] = useState<any>({})
-  const data: any[] = [
-    {
-      key: '1',
-      age: 32,
-      address: 'New York ',
-      domain: 'https://www.baidu.com'
-    },
-    {
-      key: '2',
-      age: 32,
-      address: 'New York ',
-      domain: 'https://www.jinghan.com'
-    }]
 
-  const search = () => {
+  const search = async () => {
     const params = {
       ...searchParams,
       limit: pageSize,
       offset: (page - 1) * pageSize
     }
-    setTotal(10)
-    console.log(params)
+    try {
+      const { data } = await request.post('/v1/api/zkpass/adminTask/getTaskList', params)
+      setTotal(parseInt(data.info.total))
+      setTaskList(data.info.rows)
+    }catch (e){
+      console.error(e)
+    }
   }
 
   const handleSearch = (values: any) => {
@@ -71,12 +66,16 @@ const DemandManagement: React.FC = () => {
 
   const showTotal: PaginationProps['showTotal'] = (total) => `Total ${total} items`;
 
-  const publishConfirm = (e: any) => {
-    console.log(e);
-  };
-
-  const offConfirm = (e: any) => {
-    console.log(e);
+  const doClick = async (e: any, status) => {
+    const params = {
+      sbt_task_id: e.sbt_task_id,
+      sbt_task_status: status
+    }
+    const res = await request.post('/v1/api/zkpass/adminTask/modifyTask', params)
+    if(res.data.errno === '0'){
+      message.success('Success')
+      search()
+    }
   };
 
   const handleAdd = () => {
@@ -105,17 +104,17 @@ const DemandManagement: React.FC = () => {
       >
         <Row gutter={16}>
           <Col span={6}>
-            <Form.Item name="domain" label="Domain" >
+            <Form.Item name="search_text" label="Domain" >
               <Input/>
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item name="country" label="Country" >
+            <Form.Item name="sbt_task_country_code" label="Country" >
               <Select options={countryOptions} allowClear={true} />
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item name="category" label="Category" >
+            <Form.Item name="sbt_task_category" label="Category" >
               <Select allowClear>
                 <Select.Option value="bank">bank</Select.Option>
                 <Select.Option value="game">game</Select.Option>
@@ -123,10 +122,10 @@ const DemandManagement: React.FC = () => {
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item name="status" label="status" >
+            <Form.Item name="sbt_task_status" label="status" >
               <Select allowClear>
                 <Select.Option value="1">Published</Select.Option>
-                <Select.Option value="2">Removed from shelves</Select.Option>
+                <Select.Option value="0">Removed from shelves</Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -147,29 +146,41 @@ const DemandManagement: React.FC = () => {
           </Col>
         </Row>
       </Form>
-      <Table dataSource={data} pagination={{ pageSize, total, onChange: pageChange, showTotal }}>
-        <Column title="Country" dataIndex="age" />
-        <Column title="Category" dataIndex="address" />
-        <Column title="Domain" dataIndex="address" />
-        <Column title="Demand" dataIndex="address" />
-        <Column title="Reward" dataIndex="address" />
-        <Column title="Release time" dataIndex="address" />
-        <Column title="Status" dataIndex="address" />
+      <Table
+        dataSource={taskList}
+        rowKey={(record: any) => record.sbt_task_id}
+        pagination={{ pageSize, total, onChange: pageChange, showTotal }}
+        scroll={{ y: 'calc(100vh - 450px)' }}
+      >
+        <Column title="Country" render={(_: any, record: any) => (
+          <div>{countries[record.sbt_task_country_code.toLowerCase()]}</div>
+        )} />
+        <Column title="Category" dataIndex="sbt_task_category" />
+        <Column title="Domain" dataIndex="sbt_task_domain" />
+        <Column title="Demand" dataIndex="sbt_task_requirements" />
+        <Column title="Reward" dataIndex="sbt_task_reward" />
+        <Column title="Release time" width={180} render={(_: any, record: any) => (
+         <div>{dayjs(record.created_at).format('YYYY-MM-DD HH:mm')}</div>
+        )}/>
+        <Column title="Status" render={(_: any, record: any) => (
+          <div>{record.sbt_task_status === '0' ? 'Removed from shelves' : 'Published'}</div>
+        )} />
         <Column
           title="Action"
+          width={200}
           render={(_: any, record: any) => (
             <Space size="small">
               <Popconfirm
-                description="Are you sure to delete this task?"
-                onConfirm={() => publishConfirm(record)}
+                description="Are you sure to publish this task?"
+                onConfirm={() => doClick(record, '1')}
                 okText="Yes"
                 cancelText="No"
                 title="warning">
-                <a>publish</a>
+                <a>Publish</a>
               </Popconfirm>
               <Popconfirm
-                description="Are you sure to delete this task?"
-                onConfirm={() => offConfirm(record)}
+                description="Are you sure to off shelf this task?"
+                onConfirm={() => doClick(record, '0')}
                 okText="Yes"
                 cancelText="No"
                 title="warning">
@@ -180,7 +191,7 @@ const DemandManagement: React.FC = () => {
           )}
         />
       </Table>
-      <Detail open={visible} handleOpen={handleOpen} flag={flag} initialValue={initialValue}/>
+      <Detail open={visible} handleOpen={handleOpen} flag={flag} initialValue={initialValue} refresh={search}/>
     </div>
   );
 };

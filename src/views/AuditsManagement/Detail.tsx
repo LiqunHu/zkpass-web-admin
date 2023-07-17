@@ -1,4 +1,5 @@
 import { Button, Form, Input, Modal, Select, Space } from 'antd'
+import dayjs from 'dayjs'
 import { getCodeList } from 'country-list'
 import ReactJson from 'react-json-view'
 import React, { useEffect } from 'react'
@@ -40,51 +41,52 @@ function Detail({open, handleOpen, initialValue}:any) {
       onCancel={hideModal}
       title="detail"
       open={open}
+      width={800}
     >
       <Form
         {...formItemLayout}
+        disabled={true}
         form={form}
-        style={{ maxWidth: 600 }}
         initialValues={initialValue}
       >
-        <Form.Item name="account" label="Wallet account">
+        <Form.Item name="user_account" label="Wallet account">
           <Input/>
         </Form.Item>
-        <Form.Item name="domain" label="Domain">
+        <Form.Item name="sbt_submit_api_domain" label="Domain">
           <Input/>
         </Form.Item>
-        <Form.Item name="country" label="Country">
+        <Form.Item name="sbt_submit_api_country_code" label="Country">
           <Select options={countryOptions} />
         </Form.Item>
-        <Form.Item name="category" label="Category">
+        <Form.Item name="sbt_submit_api_category" label="Category">
           <Select>
             <Select.Option value="bank">bank</Select.Option>
             <Select.Option value="game">game</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item name="discard" label="Discard">
+        <Form.Item name="sbt_submit_api_discord" label="Discard">
           <Input/>
         </Form.Item>
-        <Form.Item name="images" label="Images">
+        <Form.Item name="sbt_submit_api_images" label="Images">
           <div></div>
         </Form.Item>
-        <Form.Item name="describe" label="describe">
+        <Form.Item name="sbt_submit_api_description" label="describe">
           <TextArea rows={2} />
         </Form.Item>
-        <Form.Item name="submitTime" label="Submit time">
-          <Input/>
+        <Form.Item label="Submit time">
+          <div>{dayjs(initialValue?.created_at).format('YYYY-MM-DD HH:mm')}</div>
         </Form.Item>
-        <Form.Item name="pageData" label="Page data">
-          <ReactJson src={jsonData} collapsed={true} />
+        <Form.Item label="Page data">
+          {initialValue?.sbt_submit_api_data?.map((item, index) => (
+            <ReactJson src={item.request} collapsed={true} key={index}/>
+          ))}
         </Form.Item>
-        <div style={{display: 'flex', justifyContent:'flex-end', alignItems:'center'}}>
-          <Space size="small">
-            <Button htmlType="button" onClick={hideModal}>
-              Confirm
-            </Button>
-          </Space>
-        </div>
       </Form>
+      <div style={{display: 'flex', justifyContent:'flex-end'}}>
+        <Button htmlType="button" onClick={hideModal}>
+          Close
+        </Button>
+      </div>
     </Modal>
   );
 }

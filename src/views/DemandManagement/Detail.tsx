@@ -1,6 +1,7 @@
-import { Button, Form, Input, Modal, Radio, Select, Space } from 'antd'
+import { Button, Form, Input, Modal, Radio, Select, Space, message } from 'antd'
 import { getCodeList } from 'country-list'
 import React, { useEffect } from 'react'
+import request from '@/utils/request'
 const { TextArea } = Input
 
 const countries = getCodeList()
@@ -20,11 +21,29 @@ const formItemLayout = {
   },
 };
 
-function Detail({open, handleOpen, flag, initialValue}:any) {
+function Detail({open, handleOpen, flag, initialValue, refresh}:any) {
   const [form] = Form.useForm();
-  const onFinish = (values: any) => {
-    console.log(values);
-    handleOpen(false);
+  const onFinish = async (values: any) => {
+    try {
+      if (initialValue?.sbt_task_id) {
+        const params = { ...values, sbt_task_id: initialValue.sbt_task_id }
+        const res = await request.post('/v1/api/zkpass/adminTask/modifyTask', params)
+        if(res.data.errno === '0'){
+          message.success('update success')
+          handleOpen(false);
+          refresh()
+        }
+      } else {
+        const res = await request.post('/v1/api/zkpass/adminTask/addTask', values)
+        if(res.data.errno === '0'){
+          message.success('add success')
+          handleOpen(false);
+          refresh()
+        }
+      }
+    }catch (e){
+      console.error(e)
+    }
   };
 
   useEffect(() => {
@@ -50,30 +69,30 @@ function Detail({open, handleOpen, flag, initialValue}:any) {
         style={{ maxWidth: 600 }}
         initialValues={initialValue}
       >
-        <Form.Item name="country" label="Country" rules={[{ required: true }]}>
+        <Form.Item name="sbt_task_country_code" label="Country" rules={[{ required: true }]}>
           <Select options={countryOptions} />
         </Form.Item>
-        <Form.Item name="category" label="Category" rules={[{ required: true }]}>
+        <Form.Item name="sbt_task_category" label="Category" rules={[{ required: true }]}>
           <Select>
             <Select.Option value="bank">bank</Select.Option>
             <Select.Option value="game">game</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item name="domain" label="Domain" rules={[{ required: true }]}>
+        <Form.Item name="sbt_task_domain" label="Domain" rules={[{ required: true }]}>
           <Input/>
         </Form.Item>
-        <Form.Item name="info" label="Info" rules={[{ required: true }]}>
+        <Form.Item name="sbt_task_requirements" label="Info" rules={[{ required: true }]}>
           <TextArea rows={2} maxLength={200} />
         </Form.Item>
-        <Form.Item name="reward" label="Reward" rules={[{ required: true }]}>
+        <Form.Item name="sbt_task_reward" label="Reward" rules={[{ required: true }]}>
           <TextArea rows={2} maxLength={200} />
         </Form.Item>
-        <Form.Item name="status" label="status" rules={[{ required: true }]}>
+        {flag === 'Add' && <Form.Item name="sbt_task_status" label="status" rules={[{ required: true }]}>
           <Radio.Group >
-            <Radio value={1}>Publish</Radio>
-            <Radio value={2}>Off shelf</Radio>
+            <Radio value="1">Publish</Radio>
+            <Radio value="2">Off shelf</Radio>
           </Radio.Group>
-        </Form.Item>
+        </Form.Item>}
         <div style={{display: 'flex', justifyContent:'flex-end', alignItems:'center'}}>
           <Space size="small">
             <Button htmlType="button" onClick={hideModal}>

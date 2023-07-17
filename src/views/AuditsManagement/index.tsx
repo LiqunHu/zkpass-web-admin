@@ -1,7 +1,9 @@
-import { Button, Col, Form, Input, PaginationProps, Popconfirm, Row, Select, Space, Table } from 'antd'
+import { Button, Col, Form, Input, message, PaginationProps, Popconfirm, Row, Select, Space, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { getCodeList } from 'country-list'
+import request from '@/utils/request'
 import Detail from './Detail'
+import dayjs from 'dayjs'
 
 const { Column } = Table;
 
@@ -9,6 +11,12 @@ const pageSize = 10
 let searchParams = {
   limit: pageSize,
   offset: 0
+}
+
+const statusMap = {
+  "0": 'Submit',
+  "1": 'Passed',
+  "2": 'Reject'
 }
 
 const countries = getCodeList()
@@ -20,32 +28,25 @@ const countryOptions = Object.keys(countries).map((key) => ({
 
 const AuditsManagement: React.FC = () => {
   const [form] = Form.useForm();
+  const [audits, setAudits] = useState<Number>(0)
   const [total, setTotal] = useState<Number>(0)
   const [page, setPage] = useState<Number>(1)
   const [visible, setVisible] = useState<Boolean>(false)
   const [initialValue, setInitialValue] = useState<any>({})
-  const data: any[] = [
-    {
-      key: '1',
-      age: 32,
-      address: 'New York ',
-      domain: 'https://www.baidu.com'
-    },
-    {
-      key: '2',
-      age: 32,
-      address: 'New York ',
-      domain: 'https://www.jinghan.com'
-    }]
 
-  const search = () => {
+  const search = async () => {
     const params = {
       ...searchParams,
       limit: pageSize,
       offset: (page - 1) * pageSize
     }
-    setTotal(10)
-    console.log(params)
+    try {
+      const { data } = await request.post('/v1/api/zkpass/adminSubmitApi/getSubmitAPIList', params)
+      setTotal(parseInt(data.info.total))
+      setAudits(data.info.rows)
+    }catch (e){
+      console.error(e)
+    }
   }
 
   const handleSearch = (values: any) => {
@@ -70,12 +71,20 @@ const AuditsManagement: React.FC = () => {
 
   const showTotal: PaginationProps['showTotal'] = (total) => `Total ${total} items`;
 
-  const publishConfirm = (e: any) => {
-    console.log(e);
-  };
-
-  const offConfirm = (e: any) => {
-    console.log(e);
+  const doClick = async (e: any, status) => {
+    const params = {
+      sbt_submit_api_id: e.id,
+      sbt_submit_api_status: status
+    }
+    try {
+      const res = await request.post('/v1/api/zkpass/adminSubmitApi/modifySubmitAPI', params)
+      if(res.data.errno === '0'){
+        message.success('Success')
+        search()
+      }
+    } catch (e){
+      console.error(e)
+    }
   };
 
   const handleSee = (e: any) => {
@@ -97,17 +106,17 @@ const AuditsManagement: React.FC = () => {
       >
         <Row gutter={16}>
           <Col span={6}>
-            <Form.Item name="domain" label="Domain" >
+            <Form.Item name="search_text" label="Domain" >
               <Input/>
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item name="country" label="Country" >
+            <Form.Item name="sbt_submit_api_country_code" label="Country" >
               <Select options={countryOptions} allowClear={true} />
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item name="category" label="Category" >
+            <Form.Item name="sbt_submit_api_category" label="Category" >
               <Select allowClear>
                 <Select.Option value="bank">bank</Select.Option>
                 <Select.Option value="game">game</Select.Option>
@@ -115,11 +124,11 @@ const AuditsManagement: React.FC = () => {
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item name="situation" label="Situation" >
+            <Form.Item name="sbt_submit_api_status" label="Status" >
               <Select allowClear>
-                <Select.Option value="1">Unaudited</Select.Option>
-                <Select.Option value="2">unqualified</Select.Option>
-                <Select.Option value="2">Passed</Select.Option>
+                <Select.Option value="0">Submit</Select.Option>
+                <Select.Option value="1">Passed</Select.Option>
+                <Select.Option value="2">Reject</Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -137,13 +146,25 @@ const AuditsManagement: React.FC = () => {
           </Col>
         </Row>
       </Form>
-      <Table dataSource={data} pagination={{ pageSize, total, onChange: pageChange, showTotal }}>
-        <Column title="Wallet account" dataIndex="age" />
-        <Column title="Category" dataIndex="address" />
-        <Column title="Domain" dataIndex="address" />
-        <Column title="Discard" dataIndex="address" />
-        <Column title="Submit time" dataIndex="address" />
-        <Column title="Audit situation" dataIndex="address" />
+      <Table
+        dataSource={audits}
+        rowKey={(record: any) => record.sbt_submit_api_id}
+        pagination={{ pageSize, total, onChange: pageChange, showTotal }}
+        scroll={{ y: 'calc(100vh - 450px)' }}
+      >
+        <Column title="Wallet account" dataIndex="user_account" ellipsis={true}/>
+        <Column title="Domain" dataIndex="sbt_submit_api_domain" />
+        <Column title="Country" render={(_: any, record: any) => (
+          <div>{countries[record.sbt_submit_api_country_code.toLowerCase()]}</div>
+        )} />
+        <Column title="Category" dataIndex="sbt_submit_api_category" />
+        <Column title="Discard" dataIndex="sbt_submit_api_discord" />
+        <Column title="Submit time" render={(_: any, record: any) => (
+          <div>{dayjs(record.created_at).format('YYYY-MM-DD HH:mm')}</div>
+        )} />
+        <Column title="Audit Status" render={(_: any, record: any) => (
+          <div>{statusMap[record.sbt_submit_api_status]}</div>
+        )}/>
         <Column
           title="Action"
           render={(_: any, record: any) => (
@@ -151,7 +172,7 @@ const AuditsManagement: React.FC = () => {
               <a onClick={() => handleSee(record)}>See</a>
               <Popconfirm
                 description="Are you sure to pass this task?"
-                onConfirm={() => publishConfirm(record)}
+                onConfirm={() => doClick(record, '1')}
                 okText="Yes"
                 cancelText="No"
                 title="passed">
@@ -159,7 +180,7 @@ const AuditsManagement: React.FC = () => {
               </Popconfirm>
               <Popconfirm
                 description="Are you sure to delete this task?"
-                onConfirm={() => offConfirm(record)}
+                onConfirm={() => doClick(record, '2')}
                 okText="Yes"
                 cancelText="No"
                 title="reject">
