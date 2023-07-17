@@ -326,13 +326,13 @@ function SystemApiControl() {
                 label: '菜单&授权API',
                 children: (
                   <>
-                    <Form.Item label="菜单路径">
+                    <Form.Item label="菜单路径" name="api_path">
                       <Input />
                     </Form.Item>
-                    <Form.Item label="授权功能">
+                    <Form.Item label="授权功能" name="api_function">
                       <Input />
                     </Form.Item>
-                    <Form.Item label="权限校验">
+                    <Form.Item label="权限校验" name="auth_flag">
                       {!pagePara ? null : (
                         <Select>
                           {pagePara.authInfo.map((item: any) => (
@@ -354,10 +354,10 @@ function SystemApiControl() {
                 label: '菜单',
                 children: (
                   <>
-                    <Form.Item label="菜单路径">
+                    <Form.Item label="菜单路径" name="api_path">
                       <Input />
                     </Form.Item>
-                    <Form.Item label="备注">
+                    <Form.Item label="备注" name="api_remark">
                       <Input.TextArea />
                     </Form.Item>
                   </>
@@ -368,10 +368,10 @@ function SystemApiControl() {
                 label: '授权API',
                 children: (
                   <>
-                    <Form.Item label="授权功能">
+                    <Form.Item label="授权功能" name="api_function">
                       <Input />
                     </Form.Item>
-                    <Form.Item label="权限校验">
+                    <Form.Item label="权限校验" name="auth_flag">
                       {!pagePara ? null : (
                         <Select>
                           {pagePara.authInfo.map((item: any) => (
