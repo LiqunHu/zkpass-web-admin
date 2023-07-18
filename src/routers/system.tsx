@@ -3,6 +3,7 @@ import LayoutPage from '@/layout'
 const SystemApiControl = lazy(
   () => import('@/views/System/Auth/SystemApiControl')
 )
+const GroupControl = lazy(() => import('@/views/System/Auth/GroupControl'))
 
 const load = (children: JSX.Element) => {
   return <Suspense fallback="">{children}</Suspense>
@@ -18,6 +19,13 @@ const admin = [
         element: load(<SystemApiControl />),
         meta: {
           title: '系统菜单维护'
+        }
+      },
+      {
+        path: 'auth/GroupControl',
+        element: load(<GroupControl />),
+        meta: {
+          title: '角色组维护'
         }
       }
     ]

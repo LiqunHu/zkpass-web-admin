@@ -14,10 +14,10 @@ import {
 import request from '@/utils/request'
 import common from '@/utils/common'
 import icons from '@/assets/icon.json'
+const apiUrl = '/v1/api/system/auth/SystemApiControl/'
 
 function SystemApiControl() {
-  const apiUrl = '/v1/api/system/auth/SystemApiControl/'
-  const [pagePara, setPagePara] = useState({authInfo:[]})
+  const [pagePara, setPagePara] = useState({ authInfo: [] })
   const [treeData, setTreeData] = useState([])
   const [folderModalV, setFolderModalV] = useState(false)
   const [iconModalV, setIconModalV] = useState(false)
@@ -201,16 +201,17 @@ function SystemApiControl() {
     }
   }
 
-  useEffect(() => {
-    const initPage = async () => {
-      try {
-        let response = await request.post(apiUrl + 'init', {})
-        setPagePara(response.data.info)
-        await getTreeData()
-      } catch (error) {
-        common.fault(error)
-      }
+  const initPage = async () => {
+    try {
+      let response = await request.post(apiUrl + 'init', {})
+      setPagePara(response.data.info)
+      await getTreeData()
+    } catch (error) {
+      common.fault(error)
     }
+  }
+
+  useEffect(() => {
     initPage()
   }, [])
 
