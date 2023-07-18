@@ -1,8 +1,8 @@
-import { Button, Form, Input, Modal, Select, Space } from 'antd'
+import { Button, Form, Input, Modal, Select } from 'antd'
 import dayjs from 'dayjs'
 import { getCodeList } from 'country-list'
 import ReactJson from 'react-json-view'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 const { TextArea } = Input
 
 const countries = getCodeList()
@@ -14,28 +14,26 @@ const countryOptions = Object.keys(countries).map((key) => ({
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 6 },
+    sm: { span: 6 }
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
-const jsonData = {}
+    sm: { span: 16 }
+  }
+}
 
-function Detail({open, handleOpen, initialValue}:any) {
-  const [form] = Form.useForm();
+function Detail({ open, handleOpen, initialValue }: any) {
+  const [form] = Form.useForm()
 
   useEffect(() => {
     form.setFieldsValue(initialValue)
   }, [initialValue])
 
   const hideModal = () => {
-    handleOpen(false);
-  };
+    handleOpen(false)
+  }
   return (
     <Modal
-      forceRender={form}
       destroyOnClose={true}
       footer={null}
       onCancel={hideModal}
@@ -50,10 +48,10 @@ function Detail({open, handleOpen, initialValue}:any) {
         initialValues={initialValue}
       >
         <Form.Item name="user_account" label="Wallet account">
-          <Input/>
+          <Input />
         </Form.Item>
         <Form.Item name="sbt_submit_api_domain" label="Domain">
-          <Input/>
+          <Input />
         </Form.Item>
         <Form.Item name="sbt_submit_api_country_code" label="Country">
           <Select options={countryOptions} />
@@ -65,7 +63,7 @@ function Detail({open, handleOpen, initialValue}:any) {
           </Select>
         </Form.Item>
         <Form.Item name="sbt_submit_api_discord" label="Discard">
-          <Input/>
+          <Input />
         </Form.Item>
         <Form.Item name="sbt_submit_api_images" label="Images">
           <div></div>
@@ -74,21 +72,23 @@ function Detail({open, handleOpen, initialValue}:any) {
           <TextArea rows={2} />
         </Form.Item>
         <Form.Item label="Submit time">
-          <div>{dayjs(initialValue?.created_at).format('YYYY-MM-DD HH:mm')}</div>
+          <div>
+            {dayjs(initialValue?.created_at).format('YYYY-MM-DD HH:mm')}
+          </div>
         </Form.Item>
         <Form.Item label="Page data">
-          {initialValue?.sbt_submit_api_data?.map((item, index) => (
-            <ReactJson src={item.request} collapsed={true} key={index}/>
+          {initialValue?.sbt_submit_api_data?.map((item: any, index: number) => (
+            <ReactJson src={item.request} collapsed={true} key={index} />
           ))}
         </Form.Item>
       </Form>
-      <div style={{display: 'flex', justifyContent:'flex-end'}}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Button htmlType="button" onClick={hideModal}>
           Close
         </Button>
       </div>
     </Modal>
-  );
+  )
 }
 
-export default Detail;
+export default Detail

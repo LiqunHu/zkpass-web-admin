@@ -8,7 +8,7 @@ import Home from '@/views/Home'
 import Nomatch from '@/views/Nomatch'
 import system from './system'
 import dashboard from './dashboard'
-import demand from './demand'
+import zkpass from './zkpass'
 const Login = lazy(() => import('@/views/Login'))
 
 const load = (children: JSX.Element) => {
@@ -31,7 +31,7 @@ const routeList = [
   },
   ...system,
   ...dashboard,
-  ...demand,
+  ...zkpass,
   {
     path: '*',
     element: <Nomatch />,

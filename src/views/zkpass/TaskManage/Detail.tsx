@@ -1,6 +1,6 @@
 import { Button, Form, Input, Modal, Radio, Select, Space, message } from 'antd'
 import { getCodeList } from 'country-list'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import request from '@/utils/request'
 const { TextArea } = Input
 
@@ -55,7 +55,6 @@ function Detail({open, handleOpen, flag, initialValue, refresh}:any) {
   };
   return (
     <Modal
-      forceRender={form}
       destroyOnClose={true}
       footer={null}
       onCancel={hideModal}

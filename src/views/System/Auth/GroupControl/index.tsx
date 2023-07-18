@@ -1,18 +1,8 @@
 import './style.css'
 import { useState, useEffect } from 'react'
-import {
-  Button,
-  Tree,
-  Modal,
-  Form,
-  Input,
-  Table,
-  Tabs,
-  Select,
-  Popconfirm
-} from 'antd'
+import { Button, Tree, Modal, Form, Input, Popconfirm } from 'antd'
 import { FolderOpenOutlined, FileOutlined } from '@ant-design/icons'
-import type { DataNode, TreeProps } from 'antd/es/tree'
+import type { DataNode } from 'antd/es/tree'
 import request from '@/utils/request'
 import common from '@/utils/common'
 const apiUrl = '/v1/api/system/auth/GroupControl/'
