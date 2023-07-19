@@ -5,6 +5,10 @@ const SystemApiControl = lazy(
 )
 const GroupControl = lazy(() => import('@/views/System/Auth/GroupControl'))
 
+const OperatorControl = lazy(
+  () => import('@/views/System/Auth/OperatorControl')
+)
+
 const load = (children: JSX.Element) => {
   return <Suspense fallback="">{children}</Suspense>
 }
@@ -26,6 +30,13 @@ const admin = [
         element: load(<GroupControl />),
         meta: {
           title: '角色组维护'
+        }
+      },
+      {
+        path: 'auth/OperatorControl',
+        element: load(<OperatorControl />),
+        meta: {
+          title: '用户维护'
         }
       }
     ]

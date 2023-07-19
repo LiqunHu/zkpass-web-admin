@@ -24,7 +24,7 @@ function SystemApiControl() {
   const [menuModalV, setMenuModalV] = useState(false)
   const [folderForm] = Form.useForm()
   const [menuForm] = Form.useForm()
-  const [action, setAction] = useState('')
+  const [action, setAction] = useState('add')
   const [actNode, setActNode] = useState(Object.create(null))
   const [apiType, setApiType] = useState('0')
 

@@ -15,7 +15,7 @@ import React, { useEffect, useState } from 'react'
 import { getCodeList } from 'country-list'
 import dayjs from 'dayjs'
 import request from '@/utils/request'
-import Detail from './Detail'
+import TaskDetail from './taskDetail'
 
 const { Column } = Table
 
@@ -224,7 +224,7 @@ const DemandManagement: React.FC = () => {
           )}
         />
       </Table>
-      <Detail
+      <TaskDetail
         open={visible}
         handleOpen={handleOpen}
         flag={flag}
