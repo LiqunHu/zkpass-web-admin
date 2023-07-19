@@ -151,7 +151,7 @@ function SystemApiControl() {
         common.success('增加目录成功')
       } else if (action === 'modify') {
         fieldsValue.systemmenu_id = actNode.systemmenu_id
-        fieldsValue.api_type = actNode.api_type
+        fieldsValue.api_type = apiType
         await request.post(apiUrl + 'modifyMenu', fieldsValue)
         common.success('修改菜单成功')
       }
