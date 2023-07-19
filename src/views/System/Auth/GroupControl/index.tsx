@@ -6,11 +6,11 @@ import type { DataNode } from 'antd/es/tree'
 import request from '@/utils/request'
 import common from '@/utils/common'
 const apiUrl = '/v1/api/system/auth/GroupControl/'
+let actNode: any = {}
 
 function GroupControl() {
   const [pagePara, setPagePara] = useState({ menuInfo: [] })
   const [treeData, setTreeData] = useState([])
-  const [actNode, setActNode] = useState(Object.create(null))
   const [action, setAction] = useState('')
   const [permissionTreeData, setPermissionTreeData] = useState<DataNode[]>([])
   const [checkData, setCheckData] = useState([])
@@ -59,16 +59,7 @@ function GroupControl() {
   }
 
   const handleCheckChange = (_selectedKeys: any, e: any) => {
-    setActNode({
-      usergroup_id: e.node.usergroup_id,
-      node_type: e.node.node_type,
-      usergroup_type: e.node.usergroup_type,
-      usergroup_code: e.node.usergroup_code,
-      name: e.node.name,
-      title: e.node.title,
-      parent_flag: e.node.parent_flag,
-      parent_id: e.node.parent_id
-    })
+    actNode = JSON.parse(JSON.stringify(e.node))
   }
 
   const addGroupModal = () => {
