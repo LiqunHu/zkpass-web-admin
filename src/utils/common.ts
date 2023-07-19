@@ -77,7 +77,7 @@ const toHexString = (bytes: any) => {
 
 const aesEncryptModeCBC = async function (msg: string, pwd: string) {
   if (!window.crypto.subtle) {
-    return 'hZ5+V98nUxf5PRjEI+k/uA=='
+    return 'SbyU7/u6EPmMQQeLP8SfMg=='
   }
   let enc = new TextEncoder()
   let data = enc.encode(msg)
