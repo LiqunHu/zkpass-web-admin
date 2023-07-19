@@ -25,7 +25,7 @@ function OperatorControl() {
       title: '序号',
       dataIndex: 'index',
       key: 'index',
-      render: (text: any, record: any, index: number) => `${index + 1}`
+      render: (_text: any, _record: any, index: number) => `${index + 1}`
     },
     {
       title: '用户名',
@@ -57,7 +57,7 @@ function OperatorControl() {
       title: 'action',
       dataIndex: 'action',
       key: 'action',
-      render: (text: string, record: any) => (
+      render: (_text: string, record: any) => (
         <>
           <Button
             type="primary"
