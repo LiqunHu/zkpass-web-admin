@@ -1,0 +1,22 @@
+.table {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  border-collapse: collapse;
+  border-color: #e2e7eb;
+  border-radius: 3px;
+  background: 0 0;
+}
+
+.highlight {
+  border-top: 1px solid #b9c3ca;
+  border-bottom: 1px solid #b9c3ca;
+}
+
+.field {
+  width: 20%;
+  text-align: right;
+  font-weight: 600;
+  color: #2d353c;
+}

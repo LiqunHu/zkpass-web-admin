@@ -9,6 +9,10 @@ const OperatorControl = lazy(
   () => import('@/views/System/Auth/OperatorControl')
 )
 
+const ResetPassword = lazy(
+  () => import('@/views/System/Auth/ResetPassword')
+)
+
 const load = (children: JSX.Element) => {
   return <Suspense fallback="">{children}</Suspense>
 }
@@ -37,6 +41,13 @@ const admin = [
         element: load(<OperatorControl />),
         meta: {
           title: '用户维护'
+        }
+      },
+      {
+        path: 'auth/ResetPassword',
+        element: load(<ResetPassword />),
+        meta: {
+          title: '重制密码'
         }
       }
     ]
