@@ -41,6 +41,10 @@ export const dashboardSlice = createSlice({
       state.userInfo = action.payload
       // return { ...state, ...action.payload }
     },
+    logout: (state) => {
+      state.userInfo = {}
+      common.clearStoreData()
+    },
     changeCollapse: (state, action: PayloadAction<any>) => {
       state.collapse = action.payload
     },
@@ -76,6 +80,7 @@ export const dashboardSlice = createSlice({
 
 export const {
   login,
+  logout,
   changeCollapse,
   setTagsItem,
   delTagsItem,

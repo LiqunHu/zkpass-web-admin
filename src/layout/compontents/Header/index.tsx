@@ -6,15 +6,25 @@ import type { MenuProps } from 'antd'
 import { Link } from 'react-router-dom'
 import { AppState } from '@/store'
 import { changeCollapse } from '@/store/dashboardSlice'
+import request from '@/utils/request'
+import { logout } from '@/store/dashboardSlice'
+import { useNavigate } from "react-router-dom"
 
 function Header() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const collapse = useSelector((state: AppState) => state.dashboard.collapse)
   const userInfo = useSelector((state: AppState) => state.dashboard.userInfo)
   const [messageCount] = useState(1)
 
   const handleChangeCollapse = () => {
     dispatch(changeCollapse(!collapse))
+  }
+
+  const logoutAct = () => {
+      request.post('/v1/api/auth/signout', {})
+      dispatch(logout())
+      navigate("/login")
   }
 
   const items: MenuProps['items'] = [
@@ -28,7 +38,7 @@ function Header() {
     },
     {
       key: 'exit',
-      label: '退出登录'
+      label: <div onClick={logoutAct}>退出登录</div>
     }
   ]
 
