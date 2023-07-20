@@ -75,7 +75,7 @@ body {
 
 .content {
   padding: 2px 5px;
-  height: calc(100vh - 115px);
+  height: calc(100vh - 75px);
   overflow: hidden;
 }
 

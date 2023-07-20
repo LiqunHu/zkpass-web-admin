@@ -8,7 +8,7 @@ import { AppState } from '@/store'
 import { changeCollapse } from '@/store/dashboardSlice'
 import request from '@/utils/request'
 import { logout } from '@/store/dashboardSlice'
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from 'react-router-dom'
 
 function Header() {
   const dispatch = useDispatch()
@@ -22,9 +22,9 @@ function Header() {
   }
 
   const logoutAct = () => {
-      request.post('/v1/api/auth/signout', {})
-      dispatch(logout())
-      navigate("/login")
+    request.post('/v1/api/auth/signout', {})
+    dispatch(logout())
+    navigate('/login')
   }
 
   const items: MenuProps['items'] = [

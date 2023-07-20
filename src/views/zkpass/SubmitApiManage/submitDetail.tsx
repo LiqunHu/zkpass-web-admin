@@ -22,29 +22,26 @@ const formItemLayout = {
   }
 }
 
-function Detail({ open, handleOpen, initialValue }: any) {
-  const [form] = Form.useForm()
+function SubmitDetail({ open, onCancel, initialValue }: any) {
+  const [dataForm] = Form.useForm()
 
   useEffect(() => {
-    form.setFieldsValue(initialValue)
-  }, [initialValue])
+    dataForm.setFieldsValue(initialValue)
+  }, [dataForm])
 
-  const hideModal = () => {
-    handleOpen(false)
-  }
   return (
     <Modal
+      forceRender
       destroyOnClose={true}
       footer={null}
-      onCancel={hideModal}
       title="detail"
       open={open}
       width={800}
     >
       <Form
+        form={dataForm}
         {...formItemLayout}
         disabled={true}
-        form={form}
         initialValues={initialValue}
       >
         <Form.Item name="user_account" label="Wallet account">
@@ -78,12 +75,12 @@ function Detail({ open, handleOpen, initialValue }: any) {
         </Form.Item>
         <Form.Item label="Page data">
           {initialValue?.sbt_submit_api_data?.map((item: any, index: number) => (
-            <ReactJson src={item.request} collapsed={true} key={index} />
+            <ReactJson src={item} collapsed={true} key={index} />
           ))}
         </Form.Item>
       </Form>
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Button htmlType="button" onClick={hideModal}>
+        <Button htmlType="button" onClick={onCancel}>
           Close
         </Button>
       </div>
@@ -91,4 +88,4 @@ function Detail({ open, handleOpen, initialValue }: any) {
   )
 }
 
-export default Detail
+export default SubmitDetail

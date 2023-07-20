@@ -14,7 +14,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import { getCodeList } from 'country-list'
 import request from '@/utils/request'
-import Detail from './Detail'
+import SubmitDetail from './submitDetail'
 import dayjs from 'dayjs'
 
 const { Column } = Table
@@ -225,9 +225,9 @@ const AuditsManagement: React.FC = () => {
           )}
         />
       </Table>
-      <Detail
+      <SubmitDetail
         open={visible}
-        handleOpen={handleOpen}
+        onCancel={()=>setVisible(false)}
         initialValue={initialValue}
       />
     </div>
