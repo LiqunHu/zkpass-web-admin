@@ -40,18 +40,18 @@ function Login() {
   return (
     <div className="login-wrap">
       <div className="ms-login">
-        <div className="ms-title">后台管理系统</div>
+        <div className="ms-title">zkPass</div>
         <Form form={loginForm} name="loginForm" className="ms-content" onFinish={onLogin}>
-          <Form.Item name="username" rules={[{ required: true, message: '请输入用户名!' }]}>
-            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名" />
+          <Form.Item name="username" rules={[{ required: true, message: 'please enter username!' }]}>
+            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="username" />
           </Form.Item>
 
-          <Form.Item name="password" rules={[{ required: true, message: '请输入密码!' }]}>
-            <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} placeholder="密码" />
+          <Form.Item name="password" rules={[{ required: true, message: 'please enter password!' }]}>
+            <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} placeholder="password" />
           </Form.Item>
           <Form.Item className="login-btn">
             <Button type="primary" htmlType="submit">
-              登陆
+              Login
             </Button>
           </Form.Item>
         </Form>
