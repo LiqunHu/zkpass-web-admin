@@ -115,10 +115,6 @@ const AuditsManagement: React.FC = () => {
     setInitialValue(e)
   }
 
-  const handleOpen = (val: boolean) => {
-    setVisible(val)
-  }
-
   return (
     <div>
       <Form form={form} name="control-hooks" onFinish={handleSearch}>
