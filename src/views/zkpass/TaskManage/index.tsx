@@ -213,7 +213,7 @@ const DemandManagement: React.FC = () => {
       </Form>
       <Table
         dataSource={taskList}
-        rowKey={(record: any) => record.sbt_task_id}
+        rowKey='sbt_task_id'
         pagination={{ pageSize, total, onChange: pageChange, showTotal }}
         scroll={{ y: 'calc(100vh - 450px)' }}
       >

@@ -76,6 +76,7 @@ const AuditsManagement: React.FC = () => {
   const [detailModalV, setDetailModalV] = useState(false)
   const [current, setCurrent] = useState({
     created_at: 0,
+    sbt_submit_api_images: '',
     sbt_submit_api_data: []
   })
 
@@ -164,9 +165,9 @@ const AuditsManagement: React.FC = () => {
           <Col span={6}>
             <Form.Item name="sbt_submit_api_status" label="Status">
               <Select allowClear>
-                <Select.Option value="0">Submit</Select.Option>
-                <Select.Option value="1">Passed</Select.Option>
-                <Select.Option value="2">Reject</Select.Option>
+                <Select.Option key="0" value="0">Submit</Select.Option>
+                <Select.Option key="1" value="1">Passed</Select.Option>
+                <Select.Option key="2" value="2">Reject</Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -186,7 +187,7 @@ const AuditsManagement: React.FC = () => {
       </Form>
       <Table
         dataSource={audits}
-        rowKey={(record: any) => record.sbt_submit_api_id}
+        rowKey='sbt_submit_api_id'
         pagination={{ pageSize, total, onChange: pageChange, showTotal }}
         scroll={{ y: 'calc(100vh - 450px)' }}
       >
@@ -230,6 +231,7 @@ const AuditsManagement: React.FC = () => {
                     sbt_submit_api_country_code:
                       record.sbt_submit_api_country_code,
                     sbt_submit_api_category: record.sbt_submit_api_category,
+                    sbt_submit_api_discord: record.sbt_submit_api_discord,
                     sbt_submit_api_description:
                       record.sbt_submit_api_description
                   })
@@ -297,17 +299,21 @@ const AuditsManagement: React.FC = () => {
           <Form.Item name="sbt_submit_api_discord" label="Discard">
             <Input />
           </Form.Item>
-          <Form.Item name="sbt_submit_api_images" label="Images">
-            <div></div>
+          <Form.Item label="Images">
+            {current.sbt_submit_api_images.split(',').map((item: any, index: number) => {
+              return (
+                <a href={`http://8.212.46.107/admin${item}`} target='_blank' key={index}>Image{index} </a>
+              )
+            })}
           </Form.Item>
           <Form.Item name="sbt_submit_api_description" label="describe">
             <TextArea rows={2} />
           </Form.Item>
           <Form.Item label="Submit time">
-            <div>{dayjs(current?.created_at).format('YYYY-MM-DD HH:mm')}</div>
+            <div>{dayjs(current.created_at).format('YYYY-MM-DD HH:mm')}</div>
           </Form.Item>
           <Form.Item label="Page data">
-            {current.sbt_submit_api_data?.map((item: any, index: number) => (
+            {current.sbt_submit_api_data.map((item: any, index: number) => (
               <ReactJson src={item} collapsed={true} key={index} />
             ))}
           </Form.Item>
