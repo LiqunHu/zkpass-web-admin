@@ -7,6 +7,7 @@ import {
   PaginationProps,
   Popconfirm,
   Row,
+  Modal,
   Select,
   Space,
   Table
@@ -14,10 +15,10 @@ import {
 import React, { useEffect, useState } from 'react'
 import { getCodeList } from 'country-list'
 import request from '@/utils/request'
-import SubmitDetail from './submitDetail'
 import dayjs from 'dayjs'
-
+import ReactJson from 'react-json-view'
 const { Column } = Table
+const { TextArea } = Input
 
 const pageSize = 10
 let searchParams = {
@@ -68,11 +69,15 @@ const categoryOptions = [
 
 const AuditsManagement: React.FC = () => {
   const [form] = Form.useForm()
+  const [dataForm] = Form.useForm()
   const [audits, setAudits] = useState([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
-  const [visible, setVisible] = useState(false)
-  const [initialValue, setInitialValue] = useState({})
+  const [detailModalV, setDetailModalV] = useState(false)
+  const [current, setCurrent] = useState({
+    created_at: 0,
+    sbt_submit_api_data: []
+  })
 
   const search = async () => {
     const params = {
@@ -137,9 +142,10 @@ const AuditsManagement: React.FC = () => {
     }
   }
 
-  const handleSee = (e: any) => {
-    setVisible(true)
-    setInitialValue(e)
+  const handleSee = (record: any) => {
+    dataForm.setFieldsValue(record)
+    setCurrent(record)
+    setDetailModalV(true)
   }
 
   return (
@@ -153,7 +159,7 @@ const AuditsManagement: React.FC = () => {
           </Col>
           <Col span={6}>
             <Form.Item name="sbt_submit_api_country_code" label="Country">
-              <Select options={countryOptions} allowClear={true} />
+              <Select options={countryOptions} allowClear showSearch />
             </Form.Item>
           </Col>
           <Col span={6}>
@@ -222,7 +228,23 @@ const AuditsManagement: React.FC = () => {
           title="Action"
           render={(_: any, record: any) => (
             <Space size="small">
-              <a onClick={() => handleSee(record)}>See</a>
+              <a
+                onClick={() => {
+                  dataForm.setFieldsValue({
+                    user_account: record.user_account,
+                    sbt_submit_api_domain: record.sbt_submit_api_domain,
+                    sbt_submit_api_country_code:
+                      record.sbt_submit_api_country_code,
+                    sbt_submit_api_category: record.sbt_submit_api_category,
+                    sbt_submit_api_description:
+                      record.sbt_submit_api_description
+                  })
+                  setCurrent(record)
+                  setDetailModalV(true)
+                }}
+              >
+                See
+              </a>
               <Popconfirm
                 description="Are you sure to pass this task?"
                 onConfirm={() => doClick(record, '1')}
@@ -245,11 +267,68 @@ const AuditsManagement: React.FC = () => {
           )}
         />
       </Table>
-      <SubmitDetail
-        open={visible}
-        onCancel={() => setVisible(false)}
-        initialValue={initialValue}
-      />
+      <Modal
+        footer={null}
+        title="detail"
+        onCancel={() => {
+          setDetailModalV(false)
+        }}
+        open={detailModalV}
+        width={800}
+      >
+        <Form
+          form={dataForm}
+          labelCol={{
+            xs: { span: 24 },
+            sm: { span: 6 }
+          }}
+          wrapperCol={{
+            xs: { span: 24 },
+            sm: { span: 16 }
+          }}
+          disabled={true}
+        >
+          <Form.Item name="user_account" label="Wallet account">
+            <Input />
+          </Form.Item>
+          <Form.Item name="sbt_submit_api_domain" label="Domain">
+            <Input />
+          </Form.Item>
+          <Form.Item name="sbt_submit_api_country_code" label="Country">
+            <Select options={countryOptions} />
+          </Form.Item>
+          <Form.Item name="sbt_submit_api_category" label="Category">
+            <Select options={categoryOptions} />
+          </Form.Item>
+          <Form.Item name="sbt_submit_api_discord" label="Discard">
+            <Input />
+          </Form.Item>
+          <Form.Item name="sbt_submit_api_images" label="Images">
+            <div></div>
+          </Form.Item>
+          <Form.Item name="sbt_submit_api_description" label="describe">
+            <TextArea rows={2} />
+          </Form.Item>
+          <Form.Item label="Submit time">
+            <div>{dayjs(current?.created_at).format('YYYY-MM-DD HH:mm')}</div>
+          </Form.Item>
+          <Form.Item label="Page data">
+            {current.sbt_submit_api_data?.map((item: any, index: number) => (
+              <ReactJson src={item} collapsed={true} key={index} />
+            ))}
+          </Form.Item>
+        </Form>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button
+            htmlType="button"
+            onClick={() => {
+              setDetailModalV(false)
+            }}
+          >
+            Close
+          </Button>
+        </div>
+      </Modal>
     </div>
   )
 }

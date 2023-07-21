@@ -6,7 +6,9 @@ import {
   message,
   PaginationProps,
   Popconfirm,
+  Radio,
   Row,
+  Modal,
   Select,
   Space,
   Table
@@ -15,15 +17,18 @@ import React, { useEffect, useState } from 'react'
 import { getCodeList } from 'country-list'
 import dayjs from 'dayjs'
 import request from '@/utils/request'
-import TaskDetail from './taskDetail'
+import common from '@/utils/common'
 
 const { Column } = Table
+const { TextArea } = Input
 
+const apiUrl = '/v1/api/zkpass/adminTask/'
 const pageSize = 10
 let searchParams = {
   limit: pageSize,
   offset: 0
 }
+let workPara: any = {}
 
 const countries = getCodeList()
 const countryOptions = Object.keys(countries).map((key) => ({
@@ -59,13 +64,14 @@ const categoryOptions = [
 ]
 
 const DemandManagement: React.FC = () => {
-  const [form] = Form.useForm()
+  const [action, setAction] = useState('add')
   const [taskList, setTaskList] = useState([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
-  const [visible, setVisible] = useState(false)
+  const [detailModalV, setDetailModalV] = useState(false)
   const [flag, setFlag] = useState('')
-  const [initialValue, setInitialValue] = useState({})
+  const [form] = Form.useForm()
+  const [detailForm] = Form.useForm()
 
   const search = async () => {
     const params = {
@@ -116,31 +122,50 @@ const DemandManagement: React.FC = () => {
       sbt_task_id: e.sbt_task_id,
       sbt_task_status: status
     }
-    const res = await request.post(
-      '/v1/api/zkpass/adminTask/modifyTask',
-      params
-    )
+    const res = await request.post(apiUrl + 'modifyTask', params)
     if (res.data.errno === '0') {
       message.success('Success')
       search()
     }
   }
 
-  const handleAdd = () => {
-    setFlag('Add')
-    setVisible(true)
-    setInitialValue({})
+  const addTaskModal = () => {
+    detailForm.resetFields()
+    setAction('add')
+    setDetailModalV(true)
   }
 
-  const handleEdit = (e: any) => {
-    console.log(e)
-    setFlag('Edit')
-    setVisible(true)
-    setInitialValue(e)
+  const modifyTaskModal = (record: any) => {
+    workPara = JSON.parse(JSON.stringify(record))
+    detailForm.resetFields()
+    detailForm.setFieldsValue({
+      sbt_task_country_code: record.sbt_task_country_code,
+      sbt_task_category: record.sbt_task_category,
+      sbt_task_domain: record.sbt_task_domain,
+      sbt_task_requirements: record.sbt_task_requirements,
+      sbt_task_reward: record.sbt_task_reward,
+      sbt_task_status: record.sbt_task_status
+    })
+    setAction('modify')
+    setDetailModalV(true)
   }
 
-  const handleOpen = (val: boolean) => {
-    setVisible(val)
+  const submitDeatil = async () => {
+    try {
+      const fieldsValue = await detailForm.validateFields()
+      if (action === 'add') {
+        await request.post(apiUrl + 'addTask', fieldsValue)
+        common.success('Add Task Success')
+      } else if (action === 'modify') {
+        fieldsValue.sbt_task_id = workPara.sbt_task_id
+        await request.post(apiUrl + 'modifyTask', fieldsValue)
+        common.success('Modify Task Success')
+      }
+      await search()
+      setDetailModalV(false)
+    } catch (error) {
+      common.fault(error)
+    }
   }
 
   return (
@@ -154,7 +179,7 @@ const DemandManagement: React.FC = () => {
           </Col>
           <Col span={6}>
             <Form.Item name="sbt_task_country_code" label="Country">
-              <Select options={countryOptions} allowClear />
+              <Select options={countryOptions} allowClear showSearch />
             </Form.Item>
           </Col>
           <Col span={6}>
@@ -179,7 +204,7 @@ const DemandManagement: React.FC = () => {
                 <Button htmlType="button" onClick={onReset}>
                   Reset
                 </Button>
-                <Button type="primary" onClick={handleAdd}>
+                <Button type="primary" onClick={addTaskModal}>
                   Add demand
                 </Button>
               </Space>
@@ -243,18 +268,78 @@ const DemandManagement: React.FC = () => {
               >
                 <a>Off shelf</a>
               </Popconfirm>
-              <a onClick={() => handleEdit(record)}>Edit</a>
+              <a onClick={() => modifyTaskModal(record)}>Edit</a>
             </Space>
           )}
         />
       </Table>
-      <TaskDetail
-        open={visible}
-        handleOpen={handleOpen}
-        flag={flag}
-        initialValue={initialValue}
-        refresh={search}
-      />
+      <Modal
+        onCancel={() => setDetailModalV(false)}
+        onOk={submitDeatil}
+        title={action === 'add' ? 'Add Task' : 'Modify Task'}
+        open={detailModalV}
+      >
+        <Form
+          labelCol={{
+            xs: { span: 24 },
+            sm: { span: 6 }
+          }}
+          wrapperCol={{
+            xs: { span: 24 },
+            sm: { span: 16 }
+          }}
+          form={detailForm}
+          style={{ maxWidth: 600 }}
+        >
+          <Form.Item
+            name="sbt_task_country_code"
+            label="Country"
+            rules={[{ required: true }]}
+          >
+            <Select options={countryOptions} showSearch />
+          </Form.Item>
+          <Form.Item
+            name="sbt_task_category"
+            label="Category"
+            rules={[{ required: true }]}
+          >
+            <Select options={categoryOptions} />
+          </Form.Item>
+          <Form.Item
+            name="sbt_task_domain"
+            label="Domain"
+            rules={[{ required: true }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="sbt_task_requirements"
+            label="Info"
+            rules={[{ required: true }]}
+          >
+            <TextArea rows={2} maxLength={200} />
+          </Form.Item>
+          <Form.Item
+            name="sbt_task_reward"
+            label="Reward"
+            rules={[{ required: true }]}
+          >
+            <TextArea rows={2} maxLength={200} />
+          </Form.Item>
+          {flag === 'Add' && (
+            <Form.Item
+              name="sbt_task_status"
+              label="status"
+              rules={[{ required: true }]}
+            >
+              <Radio.Group>
+                <Radio value="1">Publish</Radio>
+                <Radio value="2">Off shelf</Radio>
+              </Radio.Group>
+            </Form.Item>
+          )}
+        </Form>
+      </Modal>
     </div>
   )
 }
