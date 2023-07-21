@@ -302,7 +302,7 @@ const AuditsManagement: React.FC = () => {
           <Form.Item label="Images">
             {current.sbt_submit_api_images.split(',').map((item: any, index: number) => {
               return (
-                <a href={`http://8.212.46.107/admin${item}`} target='_blank' key={index}>Image{index} </a>
+                <a href={`${item}`} target='_blank' key={index}>Image{index} </a>
               )
             })}
           </Form.Item>
