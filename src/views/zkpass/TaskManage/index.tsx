@@ -31,6 +31,33 @@ const countryOptions = Object.keys(countries).map((key) => ({
   label: countries[key]
 }))
 
+const categoryOptions = [
+  {
+    value: 'Legal Identity',
+    label: 'Legal Identity'
+  },
+  {
+    value: 'Financial',
+    label: 'Financial'
+  },
+  {
+    value: 'Social',
+    label: 'Social'
+  },
+  {
+    value: 'Educational',
+    label: 'Educational'
+  },
+  {
+    value: 'Skills',
+    label: 'Skills'
+  },
+  {
+    value: 'On-chain Activities',
+    label: 'On-chain Activities'
+  }
+]
+
 const DemandManagement: React.FC = () => {
   const [form] = Form.useForm()
   const [taskList, setTaskList] = useState([])
@@ -127,15 +154,12 @@ const DemandManagement: React.FC = () => {
           </Col>
           <Col span={6}>
             <Form.Item name="sbt_task_country_code" label="Country">
-              <Select options={countryOptions} allowClear={true} />
+              <Select options={countryOptions} allowClear />
             </Form.Item>
           </Col>
           <Col span={6}>
             <Form.Item name="sbt_task_category" label="Category">
-              <Select allowClear>
-                <Select.Option value="bank">bank</Select.Option>
-                <Select.Option value="game">game</Select.Option>
-              </Select>
+              <Select options={categoryOptions} allowClear />
             </Form.Item>
           </Col>
           <Col span={6}>

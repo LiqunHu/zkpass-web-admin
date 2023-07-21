@@ -10,51 +10,85 @@ const countryOptions = Object.keys(countries).map((key) => ({
   label: countries[key]
 }))
 
+const categoryOptions = [
+  {
+    value: 'Legal Identity',
+    label: 'Legal Identity'
+  },
+  {
+    value: 'Financial',
+    label: 'Financial'
+  },
+  {
+    value: 'Social',
+    label: 'Social'
+  },
+  {
+    value: 'Educational',
+    label: 'Educational'
+  },
+  {
+    value: 'Skills',
+    label: 'Skills'
+  },
+  {
+    value: 'On-chain Activities',
+    label: 'On-chain Activities'
+  }
+]
+
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 6 },
+    sm: { span: 6 }
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
+    sm: { span: 16 }
+  }
+}
 
-function Detail({open, handleOpen, flag, initialValue, refresh}:any) {
-  const [form] = Form.useForm();
+function Detail({ open, handleOpen, flag, initialValue, refresh }: any) {
+  const [form] = Form.useForm()
   const onFinish = async (values: any) => {
     try {
       if (initialValue?.sbt_task_id) {
         const params = { ...values, sbt_task_id: initialValue.sbt_task_id }
-        const res = await request.post('/v1/api/zkpass/adminTask/modifyTask', params)
-        if(res.data.errno === '0'){
+        const res = await request.post(
+          '/v1/api/zkpass/adminTask/modifyTask',
+          params
+        )
+        if (res.data.errno === '0') {
           message.success('update success')
-          handleOpen(false);
+          handleOpen(false)
           refresh()
         }
       } else {
-        const res = await request.post('/v1/api/zkpass/adminTask/addTask', values)
-        if(res.data.errno === '0'){
+        const res = await request.post(
+          '/v1/api/zkpass/adminTask/addTask',
+          values
+        )
+        if (res.data.errno === '0') {
           message.success('add success')
-          handleOpen(false);
+          handleOpen(false)
           refresh()
         }
       }
-    }catch (e){
+    } catch (e) {
       console.error(e)
     }
-  };
+  }
 
   useEffect(() => {
     form.setFieldsValue(initialValue)
   }, [initialValue])
 
   const hideModal = () => {
-    handleOpen(false);
-  };
+    handleOpen(false)
+  }
   return (
     <Modal
+      forceRender
       destroyOnClose={true}
       footer={null}
       onCancel={hideModal}
@@ -68,31 +102,60 @@ function Detail({open, handleOpen, flag, initialValue, refresh}:any) {
         style={{ maxWidth: 600 }}
         initialValues={initialValue}
       >
-        <Form.Item name="sbt_task_country_code" label="Country" rules={[{ required: true }]}>
+        <Form.Item
+          name="sbt_task_country_code"
+          label="Country"
+          rules={[{ required: true }]}
+        >
           <Select options={countryOptions} />
         </Form.Item>
-        <Form.Item name="sbt_task_category" label="Category" rules={[{ required: true }]}>
-          <Select>
-            <Select.Option value="bank">bank</Select.Option>
-            <Select.Option value="game">game</Select.Option>
-          </Select>
+        <Form.Item
+          name="sbt_task_category"
+          label="Category"
+          rules={[{ required: true }]}
+        >
+          <Select options={categoryOptions} />
         </Form.Item>
-        <Form.Item name="sbt_task_domain" label="Domain" rules={[{ required: true }]}>
-          <Input/>
+        <Form.Item
+          name="sbt_task_domain"
+          label="Domain"
+          rules={[{ required: true }]}
+        >
+          <Input />
         </Form.Item>
-        <Form.Item name="sbt_task_requirements" label="Info" rules={[{ required: true }]}>
+        <Form.Item
+          name="sbt_task_requirements"
+          label="Info"
+          rules={[{ required: true }]}
+        >
           <TextArea rows={2} maxLength={200} />
         </Form.Item>
-        <Form.Item name="sbt_task_reward" label="Reward" rules={[{ required: true }]}>
+        <Form.Item
+          name="sbt_task_reward"
+          label="Reward"
+          rules={[{ required: true }]}
+        >
           <TextArea rows={2} maxLength={200} />
         </Form.Item>
-        {flag === 'Add' && <Form.Item name="sbt_task_status" label="status" rules={[{ required: true }]}>
-          <Radio.Group >
-            <Radio value="1">Publish</Radio>
-            <Radio value="2">Off shelf</Radio>
-          </Radio.Group>
-        </Form.Item>}
-        <div style={{display: 'flex', justifyContent:'flex-end', alignItems:'center'}}>
+        {flag === 'Add' && (
+          <Form.Item
+            name="sbt_task_status"
+            label="status"
+            rules={[{ required: true }]}
+          >
+            <Radio.Group>
+              <Radio value="1">Publish</Radio>
+              <Radio value="2">Off shelf</Radio>
+            </Radio.Group>
+          </Form.Item>
+        )}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center'
+          }}
+        >
           <Space size="small">
             <Button htmlType="button" onClick={hideModal}>
               Cancel
@@ -104,7 +167,7 @@ function Detail({open, handleOpen, flag, initialValue, refresh}:any) {
         </div>
       </Form>
     </Modal>
-  );
+  )
 }
 
-export default Detail;
+export default Detail

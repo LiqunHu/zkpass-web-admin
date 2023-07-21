@@ -39,6 +39,33 @@ const countryOptions = Object.keys(countries).map((key) => ({
   label: countries[key]
 }))
 
+const categoryOptions = [
+  {
+    value: 'Legal Identity',
+    label: 'Legal Identity'
+  },
+  {
+    value: 'Financial',
+    label: 'Financial'
+  },
+  {
+    value: 'Social',
+    label: 'Social'
+  },
+  {
+    value: 'Educational',
+    label: 'Educational'
+  },
+  {
+    value: 'Skills',
+    label: 'Skills'
+  },
+  {
+    value: 'On-chain Activities',
+    label: 'On-chain Activities'
+  }
+]
+
 const AuditsManagement: React.FC = () => {
   const [form] = Form.useForm()
   const [audits, setAudits] = useState([])
@@ -131,10 +158,7 @@ const AuditsManagement: React.FC = () => {
           </Col>
           <Col span={6}>
             <Form.Item name="sbt_submit_api_category" label="Category">
-              <Select allowClear>
-                <Select.Option value="bank">bank</Select.Option>
-                <Select.Option value="game">game</Select.Option>
-              </Select>
+              <Select options={categoryOptions} allowClear />
             </Form.Item>
           </Col>
           <Col span={6}>
@@ -223,7 +247,7 @@ const AuditsManagement: React.FC = () => {
       </Table>
       <SubmitDetail
         open={visible}
-        onCancel={()=>setVisible(false)}
+        onCancel={() => setVisible(false)}
         initialValue={initialValue}
       />
     </div>
