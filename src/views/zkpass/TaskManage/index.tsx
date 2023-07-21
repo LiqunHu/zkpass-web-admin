@@ -69,7 +69,6 @@ const DemandManagement: React.FC = () => {
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [detailModalV, setDetailModalV] = useState(false)
-  const [flag, setFlag] = useState('')
   const [form] = Form.useForm()
   const [detailForm] = Form.useForm()
 
@@ -326,7 +325,7 @@ const DemandManagement: React.FC = () => {
           >
             <TextArea rows={2} maxLength={200} />
           </Form.Item>
-          {flag === 'Add' && (
+          {action === 'add' && (
             <Form.Item
               name="sbt_task_status"
               label="status"

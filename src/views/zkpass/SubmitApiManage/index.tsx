@@ -142,12 +142,6 @@ const AuditsManagement: React.FC = () => {
     }
   }
 
-  const handleSee = (record: any) => {
-    dataForm.setFieldsValue(record)
-    setCurrent(record)
-    setDetailModalV(true)
-  }
-
   return (
     <div>
       <Form form={form} name="control-hooks" onFinish={handleSearch}>
