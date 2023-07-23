@@ -314,7 +314,7 @@ const AuditsManagement: React.FC = () => {
           </Form.Item>
           <Form.Item label="Page data">
             {current.sbt_submit_api_data.map((item: any, index: number) => (
-              <ReactJson src={item} collapsed={true} key={index} />
+              <ReactJson src={item} collapsed={true} key={index} displayDataTypes={false} />
             ))}
           </Form.Item>
         </Form>

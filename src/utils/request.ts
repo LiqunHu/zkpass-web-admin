@@ -12,7 +12,7 @@ const request = axios.create(axiosConfig)
 // Add a request interceptor
 request.interceptors.request.use(
   function (config) {
-    let token = getStoreData('token')
+    let token = getStoreData('adminToken')
     if (typeof token === 'string') {
       config.headers['Authorization'] = token
     }

@@ -13,7 +13,7 @@ export interface AccoountInfoState {
 }
 
 const initialState: AccoountInfoState = {
-  userInfo: common.getStoreData('userinfo') || {},
+  userInfo: common.getStoreData('adminUserinfo') || {},
   collapse: false,
   tagsList: []
 }
@@ -36,8 +36,8 @@ export const dashboardSlice = createSlice({
   reducers: {
     login: (state, action: PayloadAction<any>) => {
       common.clearStoreData()
-      common.setStoreData('token', action.payload.Authorization)
-      common.setStoreData('userinfo', action.payload)
+      common.setStoreData('adminToken', action.payload.Authorization)
+      common.setStoreData('adminUserinfo', action.payload)
       state.userInfo = action.payload
       // return { ...state, ...action.payload }
     },
